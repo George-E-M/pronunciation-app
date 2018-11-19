@@ -3,7 +3,24 @@ import './App.css';
 
 import logo from './logo.svg';
 
-class App extends React.Component {
+interface IState {
+  databaseRecording: any,
+  personalRecording: any,
+  databaseList: any[],
+  recentlySearchedList: any[],
+}
+
+class App extends React.Component<{}, IState> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      databaseRecording: null,
+      personalRecording: null,
+      databaseList: null,
+      recentlySearchedList: null
+    }
+  }
+
   public render() {
     return (
       <div className="App">
