@@ -1,12 +1,12 @@
 import * as React from 'react';
 import './App.css';
-
-import logo from './logo.svg';
+import DatabaseSearch from './components/DatabaseSearch';
+import RecordingDisplay from './components/RecordingDisplay';
 
 interface IState {
+  databaseList: any[],
   databaseRecording: any,
   personalRecording: any,
-  databaseList: any[],
   recentlySearchedList: any[],
 }
 
@@ -14,25 +14,37 @@ class App extends React.Component<{}, IState> {
   constructor(props: any) {
     super(props)
     this.state = {
-      databaseRecording: null,
+      databaseList: [],
+      //Rating is false to indicate a bad recording.
+      databaseRecording: {"ID":0, "Word":"None Selected", "Syllables":"", "Url":"", "Tag":"", "Uploaded":"", Rating:true},
       personalRecording: null,
-      databaseList: null,
-      recentlySearchedList: null
+      recentlySearchedList: []
     }
   }
 
   public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+      <div>
+        <div className="header-wrapper">
+				  <div className="container header">
+            &nbsp;Pronunciation App - MSA Phase 2&nbsp;
+            <div className="btn header-btn" onClick={this.switchTheme}>Switch Theme</div>
+				  </div>
+			  </div>
+        <div className="container app-body">
+          <div className="search-body">
+            <DatabaseSearch databaseList={this.state.databaseList} recentlySearchedList={this.state.recentlySearchedList} />
+          </div>
+          <div className="display-body">
+            <RecordingDisplay databaseRecording={this.state.databaseRecording} personalRecording={this.state.personalRecording} />
+          </div>
+        </div>
       </div>
     );
+  }
+
+  private switchTheme() {
+  
   }
 }
 

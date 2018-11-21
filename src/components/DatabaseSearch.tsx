@@ -26,8 +26,8 @@ export default class DatabaseSearch extends React.Component<IProps, {}> {
                         <div className="btn search-button" onClick = {this.searchForWord}>Search</div>
                     </div>
                 </div>
-                <div className="recently-searched-table">
-                    <table className="table recent-searches">
+                <div className="search-table">
+                    <table className="table searches">
                         <tbody>
                             {this.createTable()}
                         </tbody>
