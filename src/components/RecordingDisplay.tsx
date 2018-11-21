@@ -39,7 +39,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     <div className="btn app-btn" onClick={this.playPersonalRecording}>Play Your Attempt</div>
                 </div>
 
-                <div className="row recording-button-row">
+                <div className="btn-container">
                     <div className="btn app-btn" onClick={this.editRecording}>Edit</div>
                     <div className="btn app-btn" onClick={this.rateRecording}>Report</div>
                     <div className="btn app-btn" onClick={this.deleteRecording}>Delete</div>

@@ -27,6 +27,7 @@ class App extends React.Component<{}, IState> {
       <div>
         <div className="header-wrapper">
 				  <div className="container header">
+            <div className="btn header-btn" onClick={this.openHelp}>Help</div>
             &nbsp;Pronunciation App - MSA Phase 2&nbsp;
             <div className="btn header-btn" onClick={this.switchTheme}>Switch Theme</div>
 				  </div>
@@ -45,6 +46,10 @@ class App extends React.Component<{}, IState> {
 
   private switchTheme() {
   
+  }
+
+  private openHelp() {
+    
   }
 }
 

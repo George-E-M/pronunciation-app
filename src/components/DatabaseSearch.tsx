@@ -16,22 +16,22 @@ export default class DatabaseSearch extends React.Component<IProps, {}> {
                 <div className="search-heading">
                     Search for the Word you want to practice
                 </div>
-                <div className="row search-btn-container">
-                    <div className="btn app-btn" onClick={this.viewDatabase}> View Database </div>
-                    <div className="btn app-btn" onClick={this.addToDatabase}> Add To Database </div>
-                </div>
                 <div className="search-container">
                     <input type="text" id="search-textbox" className="search-bar" placeholder="Search For a Word" />
                     <div className="search-container-divider">
-                        <div className="btn search-button" onClick = {this.searchForWord}>Search</div>
+                        <div className="btn search-btn" onClick = {this.searchForWord}>Search</div>
                     </div>
                 </div>
                 <div className="search-table">
-                    <table className="table searches">
+                    <table className="table table-striped searches">
                         <tbody>
                             {this.createTable()}
                         </tbody>
                     </table>
+                </div>
+                <div className="btn-container">
+                    <div className="btn app-btn" onClick={this.viewDatabase}> View Database </div>
+                    <div className="btn app-btn" onClick={this.addToDatabase}> Add To Database </div>
                 </div>
             </div>
         );
