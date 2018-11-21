@@ -21,7 +21,8 @@ body {
   position: relative;
   font-size: 30px;
   padding-top: 0px;
-  height: 80px
+  height: 80px;
+  width: 100%;
 }
 
 
@@ -29,12 +30,13 @@ body {
   font-family: Helvetica;
   background-color: lightgrey;
   border: 2px solid black;
-  height:40px;
   text-align: center;
   font-size:18px;
   border-radius: 8px;
   padding-left: 20px;
   padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .app-btn:hover {
@@ -53,8 +55,30 @@ body {
   border-radius: 8px;
   padding-left: 20px;
   padding-right: 20px;
-  padding-top: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   right: 0px;
+}
+
+.help-btn {
+  font-family: Helvetica;
+  color: black;
+  vertical-align: middle;
+  background-color:white;
+  border: 5px solid black;
+  position: absolute;
+  margin-left: 30px;
+  font-size:18px;
+  border-radius: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  left: 0px;
+}
+
+.help-btn:hover {
+  background-color: lightgrey;
 }
 
 .header-btn:hover {
@@ -137,7 +161,8 @@ body {
   background-color: lightgrey;
   border: 2px solid black;
   height:42px;
-  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
   font-size:18px;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;

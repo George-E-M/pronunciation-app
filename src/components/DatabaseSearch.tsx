@@ -30,15 +30,10 @@ export default class DatabaseSearch extends React.Component<IProps, {}> {
                     </table>
                 </div>
                 <div className="btn-container">
-                    <div className="btn app-btn" onClick={this.viewDatabase}> View Database </div>
                     <div className="btn app-btn" onClick={this.addToDatabase}> Add To Database </div>
                 </div>
             </div>
         );
-    }
-
-    private viewDatabase() {
-        
     }
 
     private addToDatabase() {
