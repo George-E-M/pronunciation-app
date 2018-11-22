@@ -31,7 +31,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
                     Search for the Word you want to practice
                 </div>
                 <div className="search-container">
-                    <input type="text" id="search-textbox" className="search-bar" placeholder="Search For a Word" />
+                    <input type="text" id="search-textbox" className="search-bar" placeholder=" Search For a Word" />
                     <div className="search-container-divider">
                         <div className="btn search-btn" onClick = {this.searchForWord}>Search</div>
                     </div>
@@ -49,7 +49,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
                 <Modal open={open} onClose={this.onAddClose}>
 				<form>
 					<div className="form-group">
-						<label>Meme Title</label>
+						<label>Word</label>
 						<input type="text" className="form-control" id="recording-word-input" placeholder="Enter Word" />
 						<small className="form-text text-muted">You can edit any Recording later</small>
 					</div>
@@ -70,7 +70,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
 
 					<button type="button" className="btn" onClick={this.uploadRecording}>Upload</button>
 				</form>
-			</Modal>
+			    </Modal>
             </div>
         );
     }

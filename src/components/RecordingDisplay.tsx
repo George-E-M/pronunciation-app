@@ -1,4 +1,5 @@
 import * as React from "react";
+import Modal from 'react-responsive-modal';
 
 interface IProps {
     databaseRecording: any,
@@ -6,7 +7,9 @@ interface IProps {
 }
 
 interface IState {
-    open: boolean
+    deleteOpen: boolean
+    editOpen: boolean
+    reportOpen: boolean
     personalExists: boolean
 }
 
@@ -14,36 +17,97 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
     constructor(props: any) {
         super(props)
         this.state = {
-            open: false,
-            personalExists: false
+            deleteOpen: false,
+            editOpen: false,
+            reportOpen: false,
+            personalExists: false,
         }
+        
+        this.updateRecording = this.updateRecording.bind(this)
+        this.updateReport = this.updateReport.bind(this)
     }
 
     public render() {
+        const {deleteOpen} = this.state
+        const {editOpen} = this.state
+        const {reportOpen} = this.state
         const databaseRecording = this.props.databaseRecording
+
+        let reportLabel
+        let warningLabel
+
+        if (databaseRecording.rating === "true") {
+            reportLabel =  <label>Do you want to report this recording for being of poor quality?</label>
+            warningLabel = <label></label>
+        } else {
+            reportLabel =  <label>This recording has been reported to be of poor quality. Do you want to revert this report?</label>
+            warningLabel = <label>Warning: This Recording is of poor quality</label>
+        }
+
         return(
             <div className="container recording-wrapper">
                 <div className="row recording-heading">
-                    <b>{databaseRecording.Word}</b>&nbsp; {databaseRecording.Tag}
+                    <b>{databaseRecording.word}</b>&nbsp; {databaseRecording.tag}
                 </div>
-                <div className="row recording-date">
-                    {databaseRecording.Uploaded}
+                <div className="row recording-heading">
+                    <b>{databaseRecording.syllables}</b>
                 </div>
-                <div className="row recording-audio">
-                    <div className="btn app-btn" onClick={this.playDatabaseRecording}>Play</div>
+                <div className="row recording-heading">
+                    {databaseRecording.uploaded}
                 </div>
-                <div className="row record-button-row">
-                    <div className="btn app-btn" onClick={this.recordAttempt}>Record</div>
+                <div className="row recording-button">
+                    <div className="btn app-btn" onClick={this.playDatabaseRecording}>Play Audio</div>
                 </div>
-                <div className="row personal-recording-audio">
+                <div className="row recording-button">
+                    <div className="btn app-btn" onClick={this.recordAttempt}>Record An Attempt</div>
+                </div>
+                <div className="row recording-button">
                     <div className="btn app-btn" onClick={this.playPersonalRecording}>Play Your Attempt</div>
                 </div>
 
                 <div className="btn-container">
                     <div className="btn app-btn" onClick={this.editRecording}>Edit</div>
-                    <div className="btn app-btn" onClick={this.rateRecording}>Report</div>
+                    <div className="btn app-btn" onClick={this.reportRecording}>Report</div>
                     <div className="btn app-btn" onClick={this.deleteRecording}>Delete</div>
                 </div>
+                <div className="warning-label">
+                    {warningLabel}
+                </div>
+                <Modal open={editOpen} onClose={this.onEditClose}>
+				<form>
+                    <div className="form-group">
+						<label>Word</label>
+						<input type="text" className="form-control" id="recording-word-input" placeholder="Enter Word" />
+						<small className="form-text text-muted">This can be edited again later</small>
+					</div>
+                    <div className="form-group">
+						<label>Syllable division</label>
+						<input type="text" className="form-control" id="recording-syllable-input" placeholder="Enter syllables" />
+						<small className="form-text text-muted">Syllables can be edited</small>
+					</div>
+					<div className="form-group">
+						<label>Tag</label>
+						<input type="text" className="form-control" id="recording-tag-input" placeholder="Enter Tag" />
+						<small className="form-text text-muted">Tag is used to search</small>
+					</div>
+					<button type="button" className="btn" onClick={this.updateRecording}>Save Changes</button>
+				</form>
+			    </Modal>
+                <Modal open={reportOpen} onClose={this.onReportClose}>
+                    <div>
+                        <label>Report Recording</label>
+                    </div>
+                    <div>
+                        {reportLabel}
+                    </div>
+                    <div>
+                        <button type="button" className="btn" onClick={this.onReportClose}>No</button>
+                        <button type="button" className="btn" onClick={this.updateReport}>Yes</button>
+                    </div>
+                </Modal>
+                <Modal open={deleteOpen} onClose={this.onDeleteClose}>
+                    delete recording
+                </Modal>
             </div>
         );
     }
@@ -59,16 +123,99 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
     private playPersonalRecording() {
 
     }
+    
+    private updateRecording() {
+        const wordInput = document.getElementById("recording-word-input") as HTMLInputElement
+        const syllableInput = document.getElementById("recording-syllable-input") as HTMLInputElement
+        const tagInput = document.getElementById("recording-tag-input") as HTMLInputElement
 
-    private editRecording() {
+        if (wordInput === null || tagInput === null || syllableInput === null) {
+			return;
+		}
 
+        const databaseRecording = this.props.databaseRecording
+        const url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings/" + databaseRecording.id
+        const updatedWord = wordInput.value
+        const updatedTag = tagInput.value
+        const updatedSyllables = syllableInput.value
+		fetch(url, {
+			body: JSON.stringify({
+                "id": databaseRecording.id,
+                "word": updatedWord,
+                "tag": updatedTag,
+                "syllables": updatedSyllables,
+                "uploaded": databaseRecording.uploaded,
+                "url": databaseRecording.url,
+                "rating": databaseRecording.rating
+            }),
+			headers: {'cache-control': 'no-cache','Content-Type': 'application/json'},
+			method: 'PUT'
+		})
+        .then((response : any) => {
+			if (!response.ok) {
+				// Error State
+				alert(response.statusText + " " + url)
+			} else {
+				location.reload()
+			}
+		})
     }
 
-    private rateRecording() {
+    private updateReport() {
 
+        const databaseRecording = this.props.databaseRecording
+        const url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings/" + databaseRecording.id
+        
+        var updatedReport = true
+
+        if (databaseRecording.rating === "true") {
+            updatedReport = false
+        }
+
+		fetch(url, {
+			body: JSON.stringify({
+                "id": databaseRecording.id,
+                "word": databaseRecording.word,
+                "tag": databaseRecording.tag,
+                "syllables": databaseRecording.syllables,
+                "uploaded": databaseRecording.uploaded,
+                "url": databaseRecording.url,
+                "rating": updatedReport
+            }),
+			headers: {'cache-control': 'no-cache','Content-Type': 'application/json'},
+			method: 'PUT'
+		})
+        .then((response : any) => {
+			if (!response.ok) {
+				// Error State
+				alert(response.statusText + " " + url)
+			} else {
+				location.reload()
+			}
+		  })
     }
 
-    private deleteRecording() {
+    private editRecording = () => {
+		this.setState({ editOpen: true });
+    };
 
-    }
+    private onEditClose = () => {
+		this.setState({ editOpen: false });
+    };
+
+    private reportRecording = () => {
+		this.setState({ reportOpen: true });
+    };
+
+    private onReportClose = () => {
+		this.setState({ reportOpen: false });
+    };
+
+    private deleteRecording = () => {
+		this.setState({ deleteOpen: true });
+    };
+
+    private onDeleteClose = () => {
+		this.setState({ deleteOpen: false });
+    };
 }
