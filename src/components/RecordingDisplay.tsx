@@ -56,8 +56,9 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                 <div className="row recording-heading">
                     {databaseRecording.uploaded}
                 </div>
-                <div className="row recording-button">
-                    <div className="btn app-btn" onClick={this.playDatabaseRecording}>Play Audio</div>
+                <div>
+                    <label>Play Demo Recording</label>
+                    <audio ref="audioSource" controls={true} src={databaseRecording.url}/>
                 </div>
                 <div className="row recording-button">
                     <div className="btn app-btn" onClick={this.recordAttempt}>Record An Attempt</div>
@@ -119,10 +120,6 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                 </Modal>
             </div>
         );
-    }
-
-    private playDatabaseRecording() {
-        
     }
 
     private recordAttempt() {

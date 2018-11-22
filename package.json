@@ -4,12 +4,16 @@
   "private": true,
   "dependencies": {
     "@types/react-router-dom": "^4.3.0",
+    "@types/react-sound": "^1.2.1",
     "react": "^16.6.3",
+    "react-audio-player": "^0.11.0",
+    "react-audio-recorder": "^2.2.0",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.6.3",
     "react-responsive-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "^4.0.8"
+    "react-scripts-ts": "^4.0.8",
+    "react-sound": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -22,7 +26,7 @@
     "@types/node": "^10.12.9",
     "@types/react": "^16.7.6",
     "@types/react-dom": "^16.0.9",
-    "typescript": "^3.1.6"
+    "typescript": "^2.9.2"
   },
   "browserslist": [
     ">0.2%",
