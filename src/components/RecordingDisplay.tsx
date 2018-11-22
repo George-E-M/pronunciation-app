@@ -1,5 +1,6 @@
 import * as React from "react";
 import Modal from 'react-responsive-modal';
+import PersonalRecordingWrapper from './PersonalRecordingWrapper';
 
 interface IProps {
     databaseRecording: any,
@@ -56,15 +57,12 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                 <div className="row recording-heading">
                     {databaseRecording.uploaded}
                 </div>
-                <div>
+                <div className="database-play-container">
                     <label>Play Demo Recording</label>
                     <audio ref="audioSource" controls={true} src={databaseRecording.url}/>
                 </div>
-                <div className="row recording-button">
-                    <div className="btn app-btn" onClick={this.recordAttempt}>Record An Attempt</div>
-                </div>
-                <div className="row recording-button">
-                    <div className="btn app-btn" onClick={this.playPersonalRecording}>Play Your Attempt</div>
+                <div>
+                    <PersonalRecordingWrapper/>
                 </div>
 
                 <div className="btn-container">
@@ -120,14 +118,6 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                 </Modal>
             </div>
         );
-    }
-
-    private recordAttempt() {
-
-    }
-
-    private playPersonalRecording() {
-
     }
     
     private updateRecording() {
