@@ -3,7 +3,8 @@ import Modal from 'react-responsive-modal';
 
 interface IProps {
     databaseList: any[],
-    selectNewRecording: any
+    selectNewRecording: any,
+    search: any
 }
 
 interface IState {
@@ -21,6 +22,8 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
 
         this.handleFileUpload = this.handleFileUpload.bind(this)
         this.uploadRecording = this.uploadRecording.bind(this)
+        this.search = this.search.bind(this)
+        this.handleKeyPress = this.handleKeyPress.bind(this)
     }
 
     public render() {
@@ -28,12 +31,12 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
         return(
             <div className="container search-wrapper">
                 <div className="search-heading">
-                    Search for the Word you want to practice
+                    Search for the Word or Tag you want to practice
                 </div>
                 <div className="search-container">
-                    <input type="text" id="search-textbox" className="search-bar" placeholder=" Search For a Word" />
+                    <input type="text" id="search-textbox" className="search-bar" placeholder=" Search For a Word/Tag" onKeyPress={this.handleKeyPress}/>
                     <div className="search-container-divider">
-                        <div className="btn search-btn" onClick = {this.searchForWord}>Search</div>
+                        <div className="btn search-btn" onClick = {this.search}>Search</div>
                     </div>
                 </div>
                 <div className="search-table">
@@ -83,8 +86,13 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
         this.setState({open:false});
     }
 
-    private searchForWord() {
-
+    private search() {
+        const text = document.getElementById("search-textbox") as HTMLInputElement
+        if (text === null) {
+            return;
+        }
+        const searchInput = text.value 
+        this.props.search(searchInput)  
     }
 
     private createTable() {
@@ -108,6 +116,12 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
         const selectedMeme = this.props.databaseList[index]
         if (selectedMeme != null) {
             this.props.selectNewRecording(selectedMeme)
+        }
+    }
+
+    private handleKeyPress(e: any) {
+        if (e.key === 'Enter') {
+            this.search()
         }
     }
 

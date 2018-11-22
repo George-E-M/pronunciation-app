@@ -24,6 +24,7 @@ class App extends React.Component<{}, IState> {
 
     this.fetchRecordings("")
     this.selectNewRecording = this.selectNewRecording.bind(this)
+    this.fetchRecordings = this.fetchRecordings.bind(this)
   }
 
   public render() {
@@ -39,7 +40,7 @@ class App extends React.Component<{}, IState> {
 			  </div>
         <div className="container app-body">
           <div className="search-body">
-            <DatabaseSearch selectNewRecording={this.selectNewRecording} databaseList={this.state.databaseList}/>
+            <DatabaseSearch selectNewRecording={this.selectNewRecording} databaseList={this.state.databaseList} search  ={this.fetchRecordings}/>
           </div>
           <div className="display-body">
             <RecordingDisplay databaseRecording={this.state.databaseRecording} personalRecording={this.state.personalRecording} />
@@ -61,7 +62,7 @@ class App extends React.Component<{}, IState> {
   // Modal open
 	private openHelp = () => {
 		this.setState({ open: true });
-    };
+  };
     
 	// Modal close
 	private helpClosed = () => {
@@ -74,10 +75,10 @@ class App extends React.Component<{}, IState> {
     })
   }
   
-  private fetchRecordings(tag: any) {
+  private fetchRecordings(searchInput: any) {
 		let url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings"
-		if (tag !== "") {
-			url += "/tag?=" + tag
+		if (searchInput !== "") {
+			url += "/search?=" + searchInput
 		}
     fetch(url, {
        method: 'GET'
@@ -87,7 +88,7 @@ class App extends React.Component<{}, IState> {
 		let databaseRecording = json[0]
 		if (databaseRecording === undefined) {
 			databaseRecording = {"Id":0, "Word":"No Recordings","Syllables":"","Url":"","Tag":"","Uploaded":"","Rating":"true"}
-		}
+    }
 		this.setState({
 			databaseRecording,
 			databaseList: json

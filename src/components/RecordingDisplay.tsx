@@ -25,6 +25,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
         
         this.updateRecording = this.updateRecording.bind(this)
         this.updateReport = this.updateReport.bind(this)
+        this.removeRecordingFromDatabase = this.removeRecordingFromDatabase.bind(this)
     }
 
     public render() {
@@ -106,7 +107,15 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     </div>
                 </Modal>
                 <Modal open={deleteOpen} onClose={this.onDeleteClose}>
-                    delete recording
+                    <div>
+                        <label>Delete Recording</label>
+                    </div>
+                        <label>Are you sure you want to delete this recording?</label>
+                        <label>Once deleted it can't be recovered</label>
+                    <div>
+                        <button type="button" className="btn" onClick={this.onDeleteClose}>No</button>
+                        <button type="button" className="btn" onClick={this.removeRecordingFromDatabase}>Yes</button>
+                    </div>
                 </Modal>
             </div>
         );
@@ -193,6 +202,24 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
 				location.reload()
 			}
 		  })
+    }
+
+    private removeRecordingFromDatabase() {
+        const databaseRecording = this.props.databaseRecording
+        const url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings/" + databaseRecording.id
+
+		fetch(url, {
+			method: 'DELETE'
+		})
+        .then((response : any) => {
+			if (!response.ok) {
+				// Error Response
+				alert(response.statusText)
+			}
+			else {
+              location.reload()
+			}
+		})
     }
 
     private editRecording = () => {
