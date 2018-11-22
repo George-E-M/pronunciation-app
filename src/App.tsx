@@ -8,7 +8,6 @@ interface IState {
   databaseList: any[],
   databaseRecording: any,
   personalRecording: any,
-  recentlySearchedList: any[],
   open: boolean,
 }
 
@@ -20,9 +19,11 @@ class App extends React.Component<{}, IState> {
       //Rating is false to indicate a bad recording.
       databaseRecording: {"ID":0, "Word":"None Selected", "Syllables":"", "Url":"", "Tag":"", "Uploaded":"", Rating:true},
       personalRecording: null,
-      recentlySearchedList: [],
       open: false
     }
+
+    this.fetchRecordings("")
+    this.selectNewRecording = this.selectNewRecording.bind(this)
   }
 
   public render() {
@@ -38,7 +39,7 @@ class App extends React.Component<{}, IState> {
 			  </div>
         <div className="container app-body">
           <div className="search-body">
-            <DatabaseSearch databaseList={this.state.databaseList} recentlySearchedList={this.state.recentlySearchedList} />
+            <DatabaseSearch selectNewRecording={this.selectNewRecording} databaseList={this.state.databaseList}/>
           </div>
           <div className="display-body">
             <RecordingDisplay databaseRecording={this.state.databaseRecording} personalRecording={this.state.personalRecording} />
@@ -60,12 +61,39 @@ class App extends React.Component<{}, IState> {
   // Modal open
 	private openHelp = () => {
 		this.setState({ open: true });
-	  };
-	
+    };
+    
 	// Modal close
 	private helpClosed = () => {
 		this.setState({ open: false });
-	};
+  };
+
+  private selectNewRecording(newRecording: any) {
+    this.setState({
+      databaseRecording: newRecording
+    })
+  }
+  
+  private fetchRecordings(tag: any) {
+		let url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings"
+		if (tag !== "") {
+			url += "/tag?=" + tag
+		}
+    fetch(url, {
+       method: 'GET'
+    })
+    .then(response => response.json())
+    .then(json => {
+		let databaseRecording = json[0]
+		if (databaseRecording === undefined) {
+			databaseRecording = {"Id":0, "Word":"No Recordings","Syllables":"","Url":"","Tag":"","Uploaded":"","Rating":"true"}
+		}
+		this.setState({
+			databaseRecording,
+			databaseList: json
+		})
+    });
+	}
 }
 
 export default App;
