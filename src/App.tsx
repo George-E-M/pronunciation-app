@@ -120,7 +120,6 @@ class App extends React.Component<{}, IState> {
                 appId="717313765314287"
                 autoLoad={false}
                 fields="name,email,picture"
-                className="btn btn-primary bottom-button btn3"
                 onClick={this.handleFacebookLogin}
                 callback={this.facebookResponse}
               />
@@ -134,7 +133,7 @@ class App extends React.Component<{}, IState> {
             &nbsp;Pronounce! - MSA Phase 2&nbsp;
             <img src={Logo} height='45'/>
             <FacebookShareButton 
-              url="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmsaphase2pronounce.azurewebsites.net%2F&amp;src=sdkpreparse"
+              url="https://www.facebook.com/sharer/sharer.php?u=https%3A//msaphase2pronounce.azurewebsites.net/"
               quote="Pronunciation Application"
               className="header-btn">
               Share on Facebook
