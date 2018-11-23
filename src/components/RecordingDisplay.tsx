@@ -111,7 +111,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     <div>
                         {reportLabel}
                     </div>
-                    <div className="btn-toolbar">
+                    <div className="btn-toolbar btn-container">
                         <button type="button" className="btn btn1" onClick={this.onReportClose}>No</button>
                         <button type="button" className="btn btn2" onClick={this.updateReport}>Yes</button>
                     </div>
@@ -126,7 +126,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                         <div>
                             <label>Once deleted it can't be recovered.</label>
                         </div>
-                    <div className="btn-toolbar">
+                    <div className="btn-toolbar btn-container">
                         <button type="button" className="btn btn1" onClick={this.onDeleteClose}>No</button>
                         <button type="button" className="btn btn2" onClick={this.removeRecordingFromDatabase}>Yes</button>
                     </div>

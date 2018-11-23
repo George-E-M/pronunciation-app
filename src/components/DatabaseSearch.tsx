@@ -1,5 +1,4 @@
 import * as React from "react";
-import MediaStreamRecorder from 'msr';
 import Modal from 'react-responsive-modal';
 
 interface IProps {
@@ -25,8 +24,6 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
         this.uploadRecording = this.uploadRecording.bind(this)
         this.search = this.search.bind(this)
         this.handleKeyPress = this.handleKeyPress.bind(this)
-        this.searchByVoice = this.searchByVoice.bind(this)
-        this.postAudio = this.postAudio.bind(this)
         this.showBadRecordings = this.showBadRecordings.bind(this)
     }
 
@@ -38,7 +35,6 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
                     Search for the Word or Tag you want to practice
                 </div>
                 <div className="search-container">
-                    <div className="btn" onClick={this.searchByVoice}><i className="fa fa-microphone" /></div>
                     <input type="text" id="search-textbox" className="search-bar" placeholder=" Search For a Word/Tag" onKeyPress={this.handleKeyPress}/>
                     <div className="search-container-divider">
                         <div className="btn search-btn" onClick = {this.search}>Search</div>
@@ -181,66 +177,5 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
                 })
 			}
 		  })
-    }
-    
-    private searchByVoice() {
-        const mediaConstraints = {
-            audio: true
-        }
-        const onMediaSuccess = (stream: any) => {
-            const mediaRecorder = new MediaStreamRecorder(stream);
-            mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
-            mediaRecorder.ondataavailable = (blob: any) => {
-                this.postAudio(URL.createObjectURL(blob));
-                mediaRecorder.stop()
-            }
-            mediaRecorder.start(3000);
-        }
-    
-        navigator.mediaDevices.getUserMedia(mediaConstraints).then(onMediaSuccess).catch(onMediaError)
-    
-        function onMediaError(e: any) {
-            console.error('media error', e);
-        }
-    }
-
-    private postAudio(blob: any) {
-        let accessToken: any;
-        fetch('https://westus.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
-            headers: {
-                'Content-Length': '0',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Ocp-Apim-Subscription-Key': 'dd27e38734724959b178650ed881b4c4'
-            },
-            method: 'POST'
-        }).then((response) => {
-            // console.log(response.text())
-            return response.text()
-        }).then((response) => {
-            console.log(response)
-            accessToken = response
-        }).catch((error) => {
-            console.log("Error", error)
-        });
-
-        // posting audio
-        fetch('https://westus.api.cognitive.microsoft.com/sts/v1.0', {
-            body: blob, // this is a .wav audio file    
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer' + accessToken,
-                'Content-Type': 'audio/wav;codec=audio/pcm; samplerate=16000',
-                'Ocp-Apim-Subscription-Key': 'dd27e38734724959b178650ed881b4c4'
-            },    
-            method: 'POST'
-        }).then((res) => {
-            return res.json()
-        }).then((res: any) => {
-            console.log(res)
-            const textBox = document.getElementById("search-textbox") as HTMLInputElement
-            textBox.value = (res.DisplayText as string).slice(0, -1)
-        }).catch((error) => {
-            console.log("Error", error)
-        });
     }
 }

@@ -7,6 +7,8 @@ import Logo from './logo.png'
 import Modal from 'react-responsive-modal';
 import DatabaseSearch from './components/DatabaseSearch';
 import RecordingDisplay from './components/RecordingDisplay';
+import FacebookLogin from 'react-facebook-login';
+import {FacebookShareButton} from 'react-share'
 
 const chatBotTheme = {
 	background: '#f5f8fb',
@@ -38,7 +40,7 @@ const chatSteps=[
   },
   {
       id: 'search',
-      message: 'To search through the database you can either use the search bar or the microphone. When using the search bar you simply type in the name of the word or tag you are looking for. When using the microphone, simply press the microphone and it will begin recording for 3 seconds. When it is done it will search for whatever you asked for.',
+      message: 'To search through the database you can use the search bar. When using the search bar you simply type in the name of the word or tag you are looking for.',
       trigger: 'initial',
   },
   {
@@ -111,9 +113,17 @@ class App extends React.Component<{}, IState> {
 			        screenshotFormat="image/jpeg"
 			        ref={this.state.refCamera}
 		        />
-		        <div className="row nav-row btn-toolbar">
-			      <div className="btn btn-primary bottom-button btn1" onClick={this.authenticate}>Login</div>
-            <div className="btn btn-secondary bottom-button btn2" onClick={this.skipLogin}>Skip Login</div>
+		        <div className="row nav-row btn-container">
+			        <div className="btn btn-primary bottom-button btn1" onClick={this.authenticate}>Login</div>
+              <div className="btn btn-primary bottom-button btn2" onClick={this.skipLogin}>Skip Login</div>
+              <FacebookLogin
+                appId="717313765314287"
+                autoLoad={false}
+                fields="name,email,picture"
+                className="btn btn-primary bottom-button btn3"
+                onClick={this.handleFacebookLogin}
+                callback={this.facebookResponse}
+              />
 		        </div>
           </Modal> : ""}
         {(this.state.authenticated) ?	
@@ -123,6 +133,12 @@ class App extends React.Component<{}, IState> {
             <div className="btn help-btn" onClick={this.openHelp}>Help</div>
             &nbsp;Pronounce! - MSA Phase 2&nbsp;
             <img src={Logo} height='45'/>
+            <FacebookShareButton 
+              url="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmsaphase2pronounce.azurewebsites.net%2F&amp;src=sdkpreparse"
+              quote="Pronunciation Application"
+              className="header-btn">
+              Share on Facebook
+            </FacebookShareButton>
 				  </div>
 			  </div>
         <div className="container app-body">
@@ -226,6 +242,20 @@ private getFaceRecognitionResult(image: string) {
 				})
 			}
 		})
+  }
+
+  private facebookResponse = (response: any) => {
+    console.log(response)
+    if(response.status !== "unknown") {
+      this.setState({
+        authenticated: true,
+        verifiedUser:true
+      })
+    }
+  }
+  
+  private handleFacebookLogin = () => {
+
   }
 
   private skipLogin() {
