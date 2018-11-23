@@ -169,7 +169,10 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText)
 			} else {
-				location.reload()
+                this.props.search("")
+                this.setState({
+                    open: false
+                })
 			}
 		  })
     }
@@ -188,7 +191,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
             mediaRecorder.start(3000);
         }
     
-        navigator.getUserMedia(mediaConstraints, onMediaSuccess, onMediaError)
+        navigator.mediaDevices.getUserMedia(mediaConstraints).then(onMediaSuccess).catch(onMediaError)
     
         function onMediaError(e: any) {
             console.error('media error', e);

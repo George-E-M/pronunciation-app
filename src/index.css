@@ -8,12 +8,13 @@ body {
 /* Header */
 .header-wrapper {
   color: black;
-  background-color: white;
+  background-color: #87ceeb;
   width: 100%;
   height: 80px;
 }
 
 .header {
+  background-color: #87ceeb;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +29,7 @@ body {
 
 .app-btn {
   font-family: Helvetica;
-  background-color: lightgrey;
+  background-color: #87ceeb;
   border: 2px solid black;
   text-align: center;
   font-size:18px;
@@ -40,31 +41,14 @@ body {
 }
 
 .app-btn:hover {
-  background-color: darkgrey;
-}
-
-.header-btn {
-  font-family: Helvetica;
-  color: black;
-  vertical-align: middle;
-  background-color:white;
-  border: 5px solid black;
-  position: absolute;
-  margin-right: 30px;
-  font-size:18px;
-  border-radius: 8px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  right: 0px;
+  background-color: #7272FE;
 }
 
 .help-btn {
   font-family: Helvetica;
   color: black;
   vertical-align: middle;
-  background-color:white;
+  background-color:#7272FE;
   border: 5px solid black;
   position: absolute;
   margin-left: 30px;
@@ -78,11 +62,7 @@ body {
 }
 
 .help-btn:hover {
-  background-color: lightgrey;
-}
-
-.header-btn:hover {
-  background-color: lightgrey;
+  background-color: #4141D8;
 }
 
 .app-body {
@@ -94,6 +74,7 @@ body {
 }
 
 .search-body {
+  border: 5px solid #87ceeb;
   padding: 1%;
   background-color: white;
   position: absolute;
@@ -104,6 +85,7 @@ body {
 }
 
 .display-body {
+  border: 5px solid #87ceeb;
   padding: 1%;
   background-color: white;
   position: absolute;
@@ -160,7 +142,7 @@ body {
 
 .search-btn {
   font-family: Helvetica;
-  background-color: lightgrey;
+  background-color: #87ceeb;
   border: 2px solid black;
   height:43px;
   display: table-cell;
@@ -175,7 +157,7 @@ body {
 }
 
 .search-btn:hover {
-  background-color: darkgrey;
+  background-color: #7272FE;
 }
 
 .search-table {
@@ -210,4 +192,31 @@ body {
   font-weight: normal;
   font-size: 20px;
   margin-top: 20px;
+}
+
+.recording-play-container {
+  display: flex;
+  margin-top: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.recording-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top:20px;
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.button-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:5px;
+}
+
+.button-separator > div {
+  margin:5px;
 }

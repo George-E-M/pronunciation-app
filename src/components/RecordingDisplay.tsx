@@ -1,19 +1,19 @@
 import * as React from "react";
 import Modal from 'react-responsive-modal';
-import PersonalRecordingWrapper from './PersonalRecordingWrapper';
+import MediaStreamRecorder from 'msr';
 
 interface IProps {
     databaseRecording: any,
-    personalRecording: any,
     verifiedUser: boolean,
+    fetchRecordings: any
 }
 
 interface IState {
     deleteOpen: boolean
     editOpen: boolean
     reportOpen: boolean
-    personalExists: boolean
     openWarning: boolean
+    attemptUrl: any
 }
 
 export default class RecordingDisplay extends React.Component<IProps, IState> {
@@ -23,13 +23,14 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
             deleteOpen: false,
             editOpen: false,
             reportOpen: false,
-            personalExists: false,
             openWarning: false,
+            attemptUrl: null,
         }
         
         this.updateRecording = this.updateRecording.bind(this)
         this.updateReport = this.updateReport.bind(this)
         this.removeRecordingFromDatabase = this.removeRecordingFromDatabase.bind(this)
+        this.recordAudio = this.recordAudio.bind(this)
     }
 
     public render() {
@@ -61,12 +62,18 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                 <div className="row recording-heading">
                     {databaseRecording.uploaded}
                 </div>
-                <div className="database-play-container">
+                <div className="recording-label">
                     <label>Play Demo Recording</label>
+                </div>
+                <div className="recording-play-container">
                     <audio ref="audioSource" controls={true} src={databaseRecording.url}/>
                 </div>
-                <div>
-                    <PersonalRecordingWrapper/>
+                <div className="recording-label">
+                    <label>Record/Play your own attempt (Recording lasts 5 seconds)</label>
+                </div>
+                <div className="recording-play-container">
+                    <div className="btn" onClick={this.recordAudio}><i className="fa fa-microphone" /></div>
+                    <audio ref="audioSource" controls={true} src={this.state.attemptUrl}/>
                 </div>
 
                 <div className="btn-container">
@@ -104,9 +111,8 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     <div>
                         {reportLabel}
                     </div>
-                    <div>
+                    <div className="button-separator">
                         <button type="button" className="btn" onClick={this.onReportClose}>No</button>
-                        <label>     </label>
                         <button type="button" className="btn" onClick={this.updateReport}>Yes</button>
                     </div>
                 </Modal>
@@ -118,11 +124,10 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                             <label>Are you sure you want to delete this recording?</label>
                         </div>
                         <div>
-                        <label>Once deleted it can't be recovered.</label>
+                            <label>Once deleted it can't be recovered.</label>
                         </div>
-                    <div>
+                    <div className="button-separator">
                         <button type="button" className="btn" onClick={this.onDeleteClose}>No</button>
-                        <label>     </label>
                         <button type="button" className="btn" onClick={this.removeRecordingFromDatabase}>Yes</button>
                     </div>
                 </Modal>
@@ -149,9 +154,18 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
 
         const databaseRecording = this.props.databaseRecording
         const url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings/" + databaseRecording.id
-        const updatedWord = wordInput.value
-        const updatedTag = tagInput.value
-        const updatedSyllables = syllableInput.value
+        var updatedWord = wordInput.value
+        if (wordInput.value === "") {
+            updatedWord = databaseRecording.word
+        }
+        var updatedTag = tagInput.value
+        if (tagInput.value === "") {
+            updatedTag = databaseRecording.tag
+        }
+        var updatedSyllables = syllableInput.value
+        if (syllableInput.value === "") {
+            updatedSyllables = databaseRecording.syllables
+        }
 		fetch(url, {
 			body: JSON.stringify({
                 "id": databaseRecording.id,
@@ -170,7 +184,8 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText + " " + url)
 			} else {
-				location.reload()
+                this.props.fetchRecordings("")
+                this.setState({ editOpen: false })
 			}
 		})
     }
@@ -204,7 +219,8 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
 				// Error State
 				alert(response.statusText + " " + url)
 			} else {
-				location.reload()
+				this.props.fetchRecordings("")
+                this.setState({ reportOpen: false })
 			}
 		  })
     }
@@ -222,9 +238,35 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
 				alert(response.statusText)
 			}
 			else {
-              location.reload()
+                this.props.fetchRecordings("")
+                this.setState({ deleteOpen: false })
 			}
 		})
+    }
+
+    private recordAudio() {
+        const mediaConstraints = {
+            audio: true
+        }
+        const onMediaSuccess = (stream: any) => {
+            const mediaRecorder = new MediaStreamRecorder(stream);
+            mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
+            mediaRecorder.ondataavailable = (blob: any) => {
+                this.updateAudio(blob);
+                mediaRecorder.stop()
+            }
+            mediaRecorder.start(5000);
+        }
+    
+        navigator.mediaDevices.getUserMedia(mediaConstraints).then(onMediaSuccess).catch(onMediaError)
+    
+        function onMediaError(e: any) {
+            console.error('media error', e);
+        }
+    }
+
+    private updateAudio(blob: any) {
+        this.setState({ attemptUrl: URL.createObjectURL(blob) })
     }
 
     private editRecording = () => {

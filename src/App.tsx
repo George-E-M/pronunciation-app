@@ -9,14 +9,14 @@ import RecordingDisplay from './components/RecordingDisplay';
 
 const chatBotTheme = {
 	background: '#f5f8fb',
-	fontFamily: "Lucida Console",
-	headerBgColor: '#3f51b5',
+	fontFamily: "Helvetica",
+	headerBgColor: '#7272FE',
 	headerFontColor: '#fff',
 	headerFontSize: '15px',
-	botBubbleColor: '#3f51b5',
+	botBubbleColor: '#7272FE',
 	botFontColor: '#fff',
 	userBubbleColor: '#fff',
-	userFontColor: '#000000',
+	userFontColor: '#4a4a4a',
   };
 const chatSteps=[
   {
@@ -64,7 +64,6 @@ const chatSteps=[
 interface IState {
   databaseList: any[],
   databaseRecording: any,
-  personalRecording: any,
   open: boolean,
   authenticated: boolean,
   refCamera: any,
@@ -79,7 +78,6 @@ class App extends React.Component<{}, IState> {
       databaseList: [],
       //Rating is false to indicate a bad recording.
       databaseRecording: {"ID":0, "Word":"None Selected", "Syllables":"", "Url":"", "Tag":"", "Uploaded":"", Rating:true},
-      personalRecording: null,
       open: false,
       authenticated: false,
       refCamera: React.createRef(),
@@ -121,10 +119,10 @@ class App extends React.Component<{}, IState> {
 			  </div>
         <div className="container app-body">
           <div className="search-body">
-            <DatabaseSearch selectNewRecording={this.selectNewRecording} databaseList={this.state.databaseList} search  ={this.fetchRecordings}/>
+            <DatabaseSearch selectNewRecording={this.selectNewRecording} databaseList={this.state.databaseList} search={this.fetchRecordings}/>
           </div>
           <div className="display-body">
-            <RecordingDisplay databaseRecording={this.state.databaseRecording} personalRecording={this.state.personalRecording} verifiedUser={this.state.verifiedUser} />
+            <RecordingDisplay databaseRecording={this.state.databaseRecording} verifiedUser={this.state.verifiedUser} fetchRecordings={this.fetchRecordings}/>
           </div>
         </div>
         <Modal open={open} onClose={this.helpClosed}>
