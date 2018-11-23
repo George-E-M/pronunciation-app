@@ -69,7 +69,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     <audio ref="audioSource" controls={true} src={databaseRecording.url}/>
                 </div>
                 <div className="recording-label">
-                    <label>Record/Play your own attempt (Recording lasts 5 seconds)</label>
+                    <label>Record/Play your own attempt (Recording is 5 seconds)</label>
                 </div>
                 <div className="recording-play-container">
                     <div className="btn" onClick={this.recordAudio}><i className="fa fa-microphone" /></div>
