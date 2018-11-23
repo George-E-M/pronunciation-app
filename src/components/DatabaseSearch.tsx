@@ -27,6 +27,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
         this.handleKeyPress = this.handleKeyPress.bind(this)
         this.searchByVoice = this.searchByVoice.bind(this)
         this.postAudio = this.postAudio.bind(this)
+        this.showBadRecordings = this.showBadRecordings.bind(this)
     }
 
     public render() {
@@ -51,7 +52,8 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
                     </table>
                 </div>
                 <div className="btn-container">
-                    <div className="btn app-btn" onClick={this.addToDatabase}> Add To Database </div>
+                    <div className="btn app-btn" onClick={this.addToDatabase}>Add To Database</div>
+                    <div className="btn app-btn" onClick={this.showBadRecordings}>View Bad Recordings</div>
                 </div>
                 <Modal open={open} onClose={this.onAddClose}>
 				<form>
@@ -129,6 +131,10 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
         }
     }
 
+    private showBadRecordings() {
+        this.props.search(":bad:")
+    }
+
     // Sets file list
 	private handleFileUpload(file: any) {
 		this.setState({
@@ -185,7 +191,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
             const mediaRecorder = new MediaStreamRecorder(stream);
             mediaRecorder.mimeType = 'audio/wav'; // check this line for audio/wav
             mediaRecorder.ondataavailable = (blob: any) => {
-                this.postAudio(blob);
+                this.postAudio(URL.createObjectURL(blob));
                 mediaRecorder.stop()
             }
             mediaRecorder.start(3000);
@@ -200,11 +206,11 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
 
     private postAudio(blob: any) {
         let accessToken: any;
-        fetch('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1', {
+        fetch('https://westus.api.cognitive.microsoft.com/sts/v1.0/issuetoken', {
             headers: {
                 'Content-Length': '0',
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Ocp-Apim-Subscription-Key': '[YOUR SUBSCRIPTION KEY]'
+                'Ocp-Apim-Subscription-Key': 'dd27e38734724959b178650ed881b4c4'
             },
             method: 'POST'
         }).then((response) => {
@@ -224,7 +230,7 @@ export default class DatabaseSearch extends React.Component<IProps, IState> {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer' + accessToken,
                 'Content-Type': 'audio/wav;codec=audio/pcm; samplerate=16000',
-                'Ocp-Apim-Subscription-Key': '5a3716cc677546d7ac9a33eb3da02ceb'
+                'Ocp-Apim-Subscription-Key': 'dd27e38734724959b178650ed881b4c4'
             },    
             method: 'POST'
         }).then((res) => {

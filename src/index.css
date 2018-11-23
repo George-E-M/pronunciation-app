@@ -191,7 +191,7 @@ body {
   justify-content: center;
   font-weight: normal;
   font-size: 20px;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 .recording-play-container {
@@ -208,15 +208,4 @@ body {
   margin-top:20px;
   font-size: 20px;
   margin-right: 10px;
-}
-
-.button-separator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding:5px;
-}
-
-.button-separator > div {
-  margin:5px;
 }

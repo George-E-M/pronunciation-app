@@ -3,6 +3,7 @@ import * as Webcam from "react-webcam";
 import './App.css'; 
 import ChatBot from 'react-simple-chatbot';
 import { ThemeProvider } from 'styled-components';
+import Logo from './logo.png'
 import Modal from 'react-responsive-modal';
 import DatabaseSearch from './components/DatabaseSearch';
 import RecordingDisplay from './components/RecordingDisplay';
@@ -32,6 +33,7 @@ const chatSteps=[
           { value: 'display', label: 'Understanding the recording display', trigger: 'display'},
           { value: 'editing', label: 'Editing recordings', trigger: 'edit' },
           { value: 'reporting', label: 'Reporting recordings', trigger: 'report'},
+          { value: 'revert', label: 'How do I revert my search?', trigger: 'searchRevert'}
       ]
   },
   {
@@ -58,6 +60,11 @@ const chatSteps=[
       id: 'report',
       message: 'To report a recording simply press the report button then select yes, what this does is warns user the recording is of poor quality.',
       trigger: 'initial',
+  },
+  {
+    id: 'searchRevert',
+    message: 'To repopulate the list with everything in the database, simply search with no input in the text field',
+    trigger: 'initial',
   }
 ]
 
@@ -104,9 +111,9 @@ class App extends React.Component<{}, IState> {
 			        screenshotFormat="image/jpeg"
 			        ref={this.state.refCamera}
 		        />
-		        <div className="row nav-row">
-			      <div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
-            <div className="btn btn-secondary bottom-button" onClick={this.skipLogin}>Skip Login</div>
+		        <div className="row nav-row btn-toolbar">
+			      <div className="btn btn-primary bottom-button btn1" onClick={this.authenticate}>Login</div>
+            <div className="btn btn-secondary bottom-button btn2" onClick={this.skipLogin}>Skip Login</div>
 		        </div>
           </Modal> : ""}
         {(this.state.authenticated) ?	
@@ -114,7 +121,8 @@ class App extends React.Component<{}, IState> {
         <div className="header-wrapper">
 				  <div className="container header">
             <div className="btn help-btn" onClick={this.openHelp}>Help</div>
-            &nbsp;Pronunciation App - MSA Phase 2&nbsp;
+            &nbsp;Pronounce! - MSA Phase 2&nbsp;
+            <img src={Logo} height='45'/>
 				  </div>
 			  </div>
         <div className="container app-body">
@@ -155,10 +163,13 @@ class App extends React.Component<{}, IState> {
   }
   
   private fetchRecordings(searchInput: any) {
-		let url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings"
-		if (searchInput !== "") {
-			url += "/search?=" + searchInput
-		}
+    let url = "https://gmce822msaphase2projectapi.azurewebsites.net/api/Recordings"
+    searchInput === ":bad:"
+		if (searchInput === ":bad:") {
+			url += "/bad"
+		} else if (searchInput !== "") {
+      url += "/search?=" + searchInput
+    }
     fetch(url, {
        method: 'GET'
     })
