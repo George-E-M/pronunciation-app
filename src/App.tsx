@@ -35,23 +35,23 @@ const chatSteps=[
       ]
   },
   {
-      id: 'searching',
-      message: 'To search throught the database you can either use the search bar or the microphone. When using the search bar you simply type in the name of the word or tag you are looking for. When using the microphone, simply press the microphone and it will begin recording for 3 seconds. When it is done it will search for whatever you asked for.',
+      id: 'search',
+      message: 'To search through the database you can either use the search bar or the microphone. When using the search bar you simply type in the name of the word or tag you are looking for. When using the microphone, simply press the microphone and it will begin recording for 3 seconds. When it is done it will search for whatever you asked for.',
       trigger: 'initial',
   },
   {
-      id: 'adding',
+      id: 'add',
       message: 'To add a recording to the database simply press the Add To Database button, fill out the form and press upload, there may be a slight delay as it is uploaded',
       trigger: 'initial',
   },
   {
       id: 'display',
       message: 'The display shows the Word, Tag, syllable split and the time of upload at the top. The first media player allows you to play the database recording. The second media play allows you to record and listen to your own attempts.',
-      trigger: 'intial',
+      trigger: 'initial',
   },
   {
       id: 'edit',
-      message: 'To edit a recording simply press the edit button, enter the values you want to change, and press save changes. Any entries left empty will remain the same.',
+      message: 'To edit a recording simply press the edit button, enter the values you want to change, and press save changes. Any entries left empty will remain the same. You have to log in to edit Recordings.',
       trigger: 'initial',
   },
   {
@@ -69,6 +69,7 @@ interface IState {
   authenticated: boolean,
   refCamera: any,
   predictionResult: any,
+  verifiedUser: boolean,
 }
 
 class App extends React.Component<{}, IState> {
@@ -83,12 +84,14 @@ class App extends React.Component<{}, IState> {
       authenticated: false,
       refCamera: React.createRef(),
       predictionResult: null,
+      verifiedUser: false,
     }
 
     this.fetchRecordings("")
     this.selectNewRecording = this.selectNewRecording.bind(this)
     this.fetchRecordings = this.fetchRecordings.bind(this)
     this.authenticate = this.authenticate.bind(this)
+    this.skipLogin = this.skipLogin.bind(this)
   }
 
   public render() {
@@ -105,6 +108,7 @@ class App extends React.Component<{}, IState> {
 		        />
 		        <div className="row nav-row">
 			      <div className="btn btn-primary bottom-button" onClick={this.authenticate}>Login</div>
+            <div className="btn btn-secondary bottom-button" onClick={this.skipLogin}>Skip Login</div>
 		        </div>
           </Modal> : ""}
         {(this.state.authenticated) ?	
@@ -120,7 +124,7 @@ class App extends React.Component<{}, IState> {
             <DatabaseSearch selectNewRecording={this.selectNewRecording} databaseList={this.state.databaseList} search  ={this.fetchRecordings}/>
           </div>
           <div className="display-body">
-            <RecordingDisplay databaseRecording={this.state.databaseRecording} personalRecording={this.state.personalRecording} />
+            <RecordingDisplay databaseRecording={this.state.databaseRecording} personalRecording={this.state.personalRecording} verifiedUser={this.state.verifiedUser} />
           </div>
         </div>
         <Modal open={open} onClose={this.helpClosed}>
@@ -203,15 +207,24 @@ private getFaceRecognitionResult(image: string) {
           console.log(json.predictions[0])
           this.setState({predictionResult: json.predictions[0] })
           if (this.state.predictionResult.probability > 0.7) {
-            this.setState({authenticated: true})
+            this.setState({
+              authenticated: true,
+              verifiedUser: true
+            })
           } else {
             this.setState({authenticated: false})
-            
           }
 				})
 			}
 		})
-}
+  }
+
+  private skipLogin() {
+    this.setState({
+      authenticated:true,
+      verifiedUser:false
+    })
+  }
 }
 
 export default App;

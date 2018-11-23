@@ -4,7 +4,8 @@ import PersonalRecordingWrapper from './PersonalRecordingWrapper';
 
 interface IProps {
     databaseRecording: any,
-    personalRecording: any
+    personalRecording: any,
+    verifiedUser: boolean,
 }
 
 interface IState {
@@ -12,6 +13,7 @@ interface IState {
     editOpen: boolean
     reportOpen: boolean
     personalExists: boolean
+    openWarning: boolean
 }
 
 export default class RecordingDisplay extends React.Component<IProps, IState> {
@@ -22,6 +24,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
             editOpen: false,
             reportOpen: false,
             personalExists: false,
+            openWarning: false,
         }
         
         this.updateRecording = this.updateRecording.bind(this)
@@ -33,6 +36,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
         const {deleteOpen} = this.state
         const {editOpen} = this.state
         const {reportOpen} = this.state
+        const {openWarning} = this.state
         const databaseRecording = this.props.databaseRecording
 
         let reportLabel
@@ -102,6 +106,7 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     </div>
                     <div>
                         <button type="button" className="btn" onClick={this.onReportClose}>No</button>
+                        <label>     </label>
                         <button type="button" className="btn" onClick={this.updateReport}>Yes</button>
                     </div>
                 </Modal>
@@ -109,11 +114,24 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
                     <div>
                         <label>Delete Recording</label>
                     </div>
-                        <label>Are you sure you want to delete this recording?</label>
-                        <label>Once deleted it can't be recovered</label>
+                        <div>
+                            <label>Are you sure you want to delete this recording?</label>
+                        </div>
+                        <div>
+                        <label>Once deleted it can't be recovered.</label>
+                        </div>
                     <div>
                         <button type="button" className="btn" onClick={this.onDeleteClose}>No</button>
+                        <label>     </label>
                         <button type="button" className="btn" onClick={this.removeRecordingFromDatabase}>Yes</button>
+                    </div>
+                </Modal>
+                <Modal open = {openWarning} onClose={this.onWarningClose}>
+                    <div>
+                        <label>Authentification Error</label>
+                    </div>
+                    <div>
+                        <label>You must be Authorized to edit and delete Recordings</label>
                     </div>
                 </Modal>
             </div>
@@ -210,8 +228,16 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
     }
 
     private editRecording = () => {
-		this.setState({ editOpen: true });
+        if (this.props.verifiedUser) {
+            this.setState({ editOpen: true });
+        } else {
+            this.setState({ openWarning: true });
+        }
     };
+
+    private onWarningClose = () => {
+        this.setState({ openWarning: false });
+    }
 
     private onEditClose = () => {
 		this.setState({ editOpen: false });
@@ -226,7 +252,11 @@ export default class RecordingDisplay extends React.Component<IProps, IState> {
     };
 
     private deleteRecording = () => {
-		this.setState({ deleteOpen: true });
+        if (this.props.verifiedUser) {
+            this.setState({ deleteOpen: true });
+        } else {
+            this.setState({ openWarning: true })
+        }
     };
 
     private onDeleteClose = () => {
